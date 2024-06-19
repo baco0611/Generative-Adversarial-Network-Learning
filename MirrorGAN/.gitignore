@@ -1,0 +1,12 @@
+*.zip
+*.tar
+*.jobib
+*.pkl
+*.pickle
+*.doc
+*.docx
+*.xlsx
+*.xls
+*.csv
+*.h5
+data/
