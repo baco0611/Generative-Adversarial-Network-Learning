@@ -3,8 +3,8 @@ import os
 import cv2
 
 def resize_image(image, size):
-    """Resize an image to the given size using cv2."""
-    return cv2.resize(image, size, interpolation=cv2.INTER_LANCZOS4)
+    """Resize an image to the given size."""
+    return cv2.resize(image, size, interpolation=cv2.INTER_AREA)
 
 def resize_images(image_dir, output_dir, size):
     """Resize the images in 'image_dir' and save into 'output_dir'."""
@@ -14,15 +14,12 @@ def resize_images(image_dir, output_dir, size):
     images = os.listdir(image_dir)
     num_images = len(images)
     for i, image in enumerate(images):
-        image_path = os.path.join(image_dir, image)
-        img = cv2.imread(image_path)
+        img = cv2.imread(os.path.join(image_dir, image))
         if img is not None:
-            resized_img = resize_image(img, size)
-            output_path = os.path.join(output_dir, image)
-            cv2.imwrite(output_path, resized_img)
-        if (i+1) % 100 == 0:
-            print ("[{}/{}] Resized the images and saved into '{}'."
-                   .format(i+1, num_images, output_dir))
+            img = resize_image(img, size)
+            cv2.imwrite(os.path.join(output_dir, image), img)
+        if (i + 1) % 100 == 0:
+            print(f"[{i+1}/{num_images}] Resized the images and saved into '{output_dir}'.")
 
 def main(args):
     image_dir = args.image_dir
@@ -32,11 +29,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image_dir', type=str, default='../data/train2017/',
-                        help='directory for train images')
-    parser.add_argument('--output_dir', type=str, default='../data/resized2017/',
-                        help='directory for saving resized images')
-    parser.add_argument('--image_size', type=int, default=256,
-                        help='size for image after processing')
+    parser.add_argument('--image_dir', type=str, default='../data/train2017/', help='directory for train images')
+    parser.add_argument('--output_dir', type=str, default='../data/resized2017/', help='directory for saving resized images')
+    parser.add_argument('--image_size', type=int, default=256, help='size for image after processing')
     args = parser.parse_args()
     main(args)
